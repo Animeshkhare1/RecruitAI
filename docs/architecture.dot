@@ -1,0 +1,27 @@
+digraph RecruitAI {
+  rankdir=TB;
+  node [shape=box, style="rounded,filled", fillcolor="#eef2f7", fontname="Helvetica", fontsize=11];
+  recruiter [label="Recruiter input\n(job configuration + candidate profiles)", shape=oval, fillcolor="#fff4d6"];
+  data [label="Tools / data\nReal job config (Amazon posting)\nSynthetic candidates (dataset.py)", shape=cylinder, fillcolor="#fff4d6"];
+  ui [label="Streamlit UI (app.py)"];
+  wf [label="Workflow controller (workflow.py)\nruns the Planner's task list in order,\nkeeps conditions and execution log"];
+  planner [label="1. Planner Agent\nplan_workflow", fillcolor="#dbe9ff"];
+  parser [label="2. Resume Parser Agent\nparse_candidate", fillcolor="#dbe9ff"];
+  matcher [label="3. Job Matcher Agent\nmatch_candidate", fillcolor="#dbe9ff"];
+  auditor [label="4. Bias Auditor Agent\naudit_candidate", fillcolor="#e3f5e1"];
+  validator [label="5. Decision Validator Agent\nvalidate_decision\n(independent score recalculation)", fillcolor="#e3f5e1"];
+  decision [label="Validation\npassed?", shape=diamond, fillcolor="#ffffff"];
+  report [label="Report Generator\ngenerate_report", fillcolor="#e3f5e1"];
+  review [label="Human review\n(manual - no automatic reprocessing)", fillcolor="#ffe1e1"];
+  dash [label="Results dashboard + CSV download", fillcolor="#eef2f7"];
+  recruiter -> ui; data -> ui [style=dashed]; ui -> wf; wf -> planner;
+  planner -> parser [label=" plan: ready + tasks"];
+  parser -> matcher [label=" parsed candidate"];
+  matcher -> auditor [label=" match result"];
+  auditor -> validator [label=" audit result"];
+  validator -> decision [label=" validation result"];
+  decision -> report [label=" pass"];
+  decision -> review [label=" fail / review"];
+  report -> dash; review -> dash;
+  planner -> dash [style=dotted, label=" plan invalid: stop + show errors", fontsize=9];
+}

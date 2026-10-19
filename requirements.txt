@@ -1,0 +1,4 @@
+# Used by the whole project (agents.py and agents_part2.py need only the standard library)
+pytest>=7.0        # tests
+pandas>=2.0        # report table + CSV export (agents_part2.py, view_tables.py)
+streamlit>=1.30    # user interface (app.py); the UI test also needs streamlit.testing (included)
